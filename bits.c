@@ -1,7 +1,7 @@
 /* 
  * CS:APP Data Lab 
  * 
- * <Please put your name and userid here>
+ * Kepei Lei klei
  * 
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
@@ -174,7 +174,11 @@ NOTES:
  *   Rating: 2
  */
 int oddBits(void) {
-  return 2;
+  int constant = 0xAA; //10101010 in binary
+  int result = constant;
+  result = result + result << 8;
+  result = result + result << 16;
+  return result;
 }
 /*
  * isTmin - returns 1 if x is the minimum, two's complement number,
