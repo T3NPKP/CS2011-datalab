@@ -243,7 +243,7 @@ int greatestBitPos(int x) {
   temp = temp | temp >> 16;
 
 
-  return temp & ((~m >> 1) ^ (1 << 31));
+  return temp & ((~temp >> 1) ^ (1 << 31));
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
