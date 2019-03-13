@@ -217,7 +217,9 @@ int bitXor(int x, int y) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int xNotZero = !!x; //1 if x is not zero, 0 if x is zero
+  int mask = ~xNotZero + 1; // 0xffffffff if x is not zero, 0x0 if x is zero
+  return (y & mask) | (z & ~mask);
 }
 /* 
  * greatestBitPos - return a mask that marks the position of the
