@@ -188,9 +188,11 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  int negOne = (~ x) + x; //generate negative 1
+  int negOne = ~0; //generate negative 1
   int next = x + negOne; // x - 1
-  int isMin = !(~(next ^ x));
+
+  // ~(next ^ x) will be 0 if x is 0 or Tmin
+  int isMin = !((~(next ^ x)) | !x);
   return isMin;
 }
 /* 
