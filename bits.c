@@ -190,7 +190,7 @@ int oddBits(void) {
 int isTmin(int x) {
   int negOne = (~ x) + x; //generate negative 1
   int next = x + negOne; // x - 1
-  int isMin = !(~(next ^ x))
+  int isMin = !(~(next ^ x));
   return isMin;
 }
 /* 
