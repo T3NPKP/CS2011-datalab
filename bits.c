@@ -205,7 +205,7 @@ int isTmin(int x) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  return (~x & y);
 }
 /* 
  * conditional - same as x ? y : z 
