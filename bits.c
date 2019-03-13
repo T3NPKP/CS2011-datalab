@@ -176,8 +176,8 @@ NOTES:
 int oddBits(void) {
   int constant = 0xAA; //10101010 in binary
   int result = constant;
-  result = result + result << 8;
-  result = result + result << 16;
+  result = result + (result << 8);
+  result = result + (result << 16);
   return result;
 }
 /*
