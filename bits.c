@@ -188,7 +188,8 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  return 2;
+  int reverse = ~ x + 1;
+  return !(reverse + x);
 }
 /* 
  * bitXor - x^y using only ~ and & 
