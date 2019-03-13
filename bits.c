@@ -207,7 +207,7 @@ int isTmin(int x) {
 int bitXor(int x, int y) {
   int sameOnes = x & y;
   int sameZeros = ~x & ~y;
-  return (~sameOnes & ~sameZeros)
+  return (~sameOnes & ~sameZeros);
 }
 /* 
  * conditional - same as x ? y : z 
