@@ -230,7 +230,24 @@ int conditional(int x, int y, int z) {
  *   Rating: 4 
  */
 int greatestBitPos(int x) {
-  return 2;
+
+  //Holders
+  int sixteen, eight, four, two, one;
+  int temp = x;
+
+  sixteen = (!!(temp >> 16)) << 4;
+  temp = temp >> sixteen;
+  eight = (!!(temp >> 8)) << 3;
+  temp = temp >> eight;
+  four = (!!(temp >> 4)) << 2;
+  temp = temp >> four;
+  two = (!!(temp >> 2)) << 1;
+  temp = temp >> two;
+  one = (!!(temp >> 1));
+  temp = temp >> one;
+
+
+  return (1 << (sixteen + eight + four + two + one + temp));
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
