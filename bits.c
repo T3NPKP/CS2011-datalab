@@ -174,6 +174,7 @@ NOTES:
  *   Rating: 2
  */
 int oddBits(void) {
+  // 4 - 4
   int constant = 0xAA; //10101010 in binary
   int result = constant;
   result = result + (result << 8); //1010101010101010
@@ -188,14 +189,16 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  int negOne = ~0; //generate negative 1
-  int next = x + negOne; // x - 1
-
-  // ~(next ^ x) will be 0 if x is 0 or Tmin
-  // !x gives 1 if x is zero
-  // isMin is 1 when both above is zero
-  int isMin = !((~(next ^ x)) | !x);
-  return isMin;
+  // 7 - 5
+//  int negOne = ~0; //generate negative 1
+//  int next = x + negOne; // x - 1
+//
+//  // ~(next ^ x) will be 0 if x is 0 or Tmin
+//  // !x gives 1 if x is zero
+//  // isMin is 1 when both above is zero
+//  int isMin = !((~(next ^ x)) | !x);
+//  return isMin;
+  return !((x << 1) | !(x >> 1))
 }
 /* 
  * bitXor - x^y using only ~ and & 
@@ -205,6 +208,7 @@ int isTmin(int x) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
+  // 7 - 7
   int sameOnes = x & y;
   int sameZeros = ~x & ~y;
   return (~sameOnes & ~sameZeros);
@@ -217,6 +221,7 @@ int bitXor(int x, int y) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
+  // 7 - 7
   int xNotZero = !!x; //1 if x is not zero, 0 if x is zero
   int mask = ~xNotZero + 1; // 0xffffffff if x is not zero, 0x0 if x is zero
   return (y & mask) | (z & ~mask);
@@ -230,6 +235,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 4 
  */
 int greatestBitPos(int x) {
+  // 15 - 46
 
   //Holders
   int temp = x;
