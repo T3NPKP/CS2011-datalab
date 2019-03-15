@@ -326,7 +326,13 @@ int satMul2(int x) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
-  return 2;
+  // This one is really abstract so I will just offer the truth table:
+  int minus = ~x + y;  //y - x - 1 >= 0
+  int diffSign = x ^ y;  //sign bit == 1 if it's different sign
+  //                  differentSign == 1 and minus ^ y == 1
+  //                  it's either an underflow (minus >= 0, which means x >= y) or x < y
+  //                      otherwise, it's either an overflow (minus < 0, which means x < y) or x >= y
+  return !((minus ^ ((minus ^ y) & diffSign)) >> 31);
 }
 /* 
  * isAsciiDigit - return 1 if 0x30 <= x <= 0x39 (ASCII codes for characters '0' to '9')
