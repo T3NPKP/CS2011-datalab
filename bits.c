@@ -241,9 +241,9 @@ int greatestBitPos(int x) {
   //Holders
   int temp = x;
 
-  // Make the digits right of the most significant bit all 1
-  // eg: 96 -> 0x7f
-  //     Tmin -> 0xffffffff
+  /* Make the digits right of the most significant bit all 1
+   * eg: 96 -> 0x7f
+   *     Tmin -> 0xffffffff */
   //2 * 5
   temp = temp | temp >> 1;
   temp = temp | temp >> 2;
@@ -299,24 +299,24 @@ int satMul2(int x) {
   // 2 + 2
   int isOverflow = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
   // 2 + 2 + 5
-  // The idea is that if it overflows, this algorithm generate 0x7fffffff. If it underflows, it generates 0x80000000
-  // To do that, we take a look at the sign. If twice is positive (aka possible underflow), we do not flip the bits
-  // If twice is negative (aka possible overflow) we flip the bits. In both case, we need to flip the sign bit
-  //                             flip the digits if it overflows, do not if underflows
-  //                             xor tMin to get the correct sign (overflow makes sign bit 0, underflow makes it 1)
+  /* The idea is that if it overflows, this algorithm generate 0x7fffffff. If it underflows, it generates 0x80000000
+   * To do that, we take a look at the sign. If twice is positive (aka possible underflow), we do not flip the bits
+   * If twice is negative (aka possible overflow) we flip the bits. In both case, we need to flip the sign bit
+   *                            flip the digits if it overflows, do not if underflows
+   *                            xor tMin to get the correct sign (overflow makes sign bit 0, underflow makes it 1) */
   return twice ^ (isOverflow & (twice ^ (twice >> 31) ^ tMin));
-  // Gosh I went all the way around to save two operations.......
-  // Here's the original one just for fun (it is way easier to understand)
-    // 1
-//  int twice = x << 1;
-    // 1 + 1
-//  int sign = x >> 31; //0x0 if positive, 0xffffffff if negative
-    // 1 + 1 + 4
-//  int maxOrMin = ((~0) << 31) + ~sign;
-    // 1 + 1 + 4 + 2
-//  int flipped = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
-    // 1 + 1 + 4 + 2 + 4
-//  return (twice & (~flipped)) | (flipped & maxOrMin);
+          // Gosh I went all the way around to save two operations.......
+        // Here's the original one just for fun (it is way easier to understand)
+            // 1
+        //  int twice = x << 1;
+            // 1 + 1
+        //  int sign = x >> 31; //0x0 if positive, 0xffffffff if negative
+            // 1 + 1 + 4
+        //  int maxOrMin = ((~0) << 31) + ~sign;
+            // 1 + 1 + 4 + 2
+        //  int flipped = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
+            // 1 + 1 + 4 + 2 + 4
+        //  return (twice & (~flipped)) | (flipped & maxOrMin);
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
@@ -326,12 +326,16 @@ int satMul2(int x) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
+  // 8 - 12
   // This one is really abstract so I will just offer the truth table:
+  // 2
   int minus = ~x + y;  //y - x - 1 >= 0
+  // 2 + 1
   int diffSign = x ^ y;  //sign bit == 1 if it's different sign
-  //                  differentSign == 1 and minus ^ y == 1
-  //                  it's either an underflow (minus >= 0, which means x >= y) or x < y
-  //                      otherwise, it's either an overflow (minus < 0, which means x < y) or x >= y
+  /*                  differentSign == 1 and minus ^ y == 1
+   *                 it's either an underflow (minus >= 0, which means x >= y) or x < y
+   *                      otherwise, it's either an overflow (minus < 0, which means x < y) or x >= y */
+  // 2 + 1 + 5
   return !((minus ^ ((minus ^ y) & diffSign)) >> 31);
 }
 /* 
@@ -344,7 +348,18 @@ int isLess(int x, int y) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  // 7 - 7
+    /*  The idea of this method is to use 0x39 - x and x - 0x30
+          both of them have to be positive to be AsciiDigit
+     */
+    // 2
+    int up = x + (~ 0x2f);  //x - 0x30
+    // 2 + 2
+    int low = 0x3a + ( ~ x); //0x39 - x
+    // 2 + 2 + 2
+    x = (up | low) >> 31;  //Set up the sign
+    // 2 + 2 + 2 + 1
+    return !x;
 }
 /*
  * trueThreeFourths - multiplies by 3/4 rounding toward 0,
