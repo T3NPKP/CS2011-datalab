@@ -262,7 +262,11 @@ int greatestBitPos(int x) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+  //6
+  //             isNegative   mask for the right n numbers
+  int temp = x + ((x >> 31) & ~(~0 << n));
+  //6 + 1
+  return temp >> n;
 }
 /* 
  * isNonNegative - return 1 if x >= 0, return 0 otherwise 
@@ -272,7 +276,7 @@ int divpwr2(int x, int n) {
  *   Rating: 3
  */
 int isNonNegative(int x) {
-  return 2;
+  return !(x >> 31);
 }
 /*
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow
