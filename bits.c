@@ -286,13 +286,22 @@ int isNonNegative(int x) {
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow
  *   Examples: satMul2(0x30000000) = 0x60000000
  *             satMul2(0x40000000) = 0x7FFFFFFF (saturate to TMax)
- *             satMul2(0x60000000) = 0x80000000 (saturate to TMin)
+ *             satMul2(0x60000000) = 0x7fffffff (saturate to TMax)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3
  */
 int satMul2(int x) {
-  return 2;
+  // 1
+  int twice = x << 1;
+  // 1 + 1
+  int sign = x >> 31; //0x0 if positive, 0xffffffff if negative
+  // 1 + 1 + 4
+  int maxOrMin = ((~0) << 31) + ~sign;
+  // 1 + 1 + 4 + 2
+  int flipped = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
+  // 1 + 1 + 4 + 2 + 4
+  return (twice & (~flipped)) | (flipped & maxOrMin);
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
