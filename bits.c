@@ -244,6 +244,7 @@ int greatestBitPos(int x) {
   // Make the digits right of the most significant bit all 1
   // eg: 96 -> 0x7f
   //     Tmin -> 0xffffffff
+  //2 * 5
   temp = temp | temp >> 1;
   temp = temp | temp >> 2;
   temp = temp | temp >> 4;
@@ -251,6 +252,7 @@ int greatestBitPos(int x) {
   temp = temp | temp >> 16;
 
   // When it's negative, (~temp >> 1) always gives 0x0, to counter that, use ^ (1 << 31)
+  //2 * 5 + 5
   return temp & ((~temp >> 1) ^ (1 << 31));
 }
 /* 
@@ -262,6 +264,7 @@ int greatestBitPos(int x) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
+  // 7 - 7
   //6
   //             isNegative   mask for the right n numbers
   int temp = x + ((x >> 31) & ~(~0 << n));
@@ -276,6 +279,7 @@ int divpwr2(int x, int n) {
  *   Rating: 3
  */
 int isNonNegative(int x) {
+  // 2 - 3
   return !(x >> 31);
 }
 /*
