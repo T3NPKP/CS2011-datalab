@@ -177,7 +177,9 @@ int oddBits(void) {
   // 4 - 4
   int constant = 0xAA; //10101010 in binary
   int result = constant;
+  //2
   result = result + (result << 8); //1010101010101010
+  //2+2
   result = result + (result << 16); //final results
   return result;
 }
@@ -189,15 +191,9 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  // 6 - 5
-  //  int negOne = ~0; //generate negative 1
-  int next = ~x + 1; // x - 1
-
-  // ~(next ^ x) will be 0 if x is 0 or Tmin
-  // !x gives 1 if x is zero
-  // isMin is 1 when both above is zero
-  int isMin = !((x ^ next) | !x);
-  return isMin;
+  // 4 - 5
+  // Only Tmin + Tmin and 0 + 0 = 0
+  return !((x + x) | !x);
 }
 /* 
  * bitXor - x^y using only ~ and & 
@@ -208,8 +204,11 @@ int isTmin(int x) {
  */
 int bitXor(int x, int y) {
   // 7 - 7
+  //1
   int sameOnes = x & y;
+  //1+3
   int sameZeros = ~x & ~y;
+  //1+3+3
   return (~sameOnes & ~sameZeros);
 }
 /* 
@@ -221,9 +220,12 @@ int bitXor(int x, int y) {
  */
 int conditional(int x, int y, int z) {
   // 7 - 7
-  int xNotZero = !!x; //1 if x is not zero, 0 if x is zero
-  int mask = ~xNotZero + 1; // 0xffffffff if x is not zero, 0x0 if x is zero
-  return (y & mask) | (z & ~mask);
+  //1
+  int xIsZero = !x; //1 if x is not zero, 0 if x is zero
+  //1+2
+  int mask = ~xIsZero + 1; // 0xffffffff if x is not zero, 0x0 if x is zero
+  //1+2+4
+  return (y & ~mask) | (z & mask);
 }
 /* 
  * greatestBitPos - return a mask that marks the position of the
@@ -241,13 +243,14 @@ int greatestBitPos(int x) {
 
   // Make the digits right of the most significant bit all 1
   // eg: 96 -> 0x7f
+  //     Tmin -> 0xffffffff
   temp = temp | temp >> 1;
   temp = temp | temp >> 2;
   temp = temp | temp >> 4;
   temp = temp | temp >> 8;
   temp = temp | temp >> 16;
 
-
+  // When it's negative, (~temp >> 1) always gives 0x0, to counter that, use ^ (1 << 31)
   return temp & ((~temp >> 1) ^ (1 << 31));
 }
 /* 
