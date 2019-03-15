@@ -374,7 +374,7 @@ int isAsciiDigit(int x) {
 int trueThreeFourths(int x) {
   int isNegMask = x >> 31;
   int roundOnes = isNegMask & 1;
-  int roundTows = isNegMask & 3;
+  int roundTows = isNegMask & 2;
   int divTwo = (x + roundOnes) >> 1;
   int divFour = (x + roundTows) >> 2;
   return divFour + divTwo;
