@@ -333,7 +333,7 @@ int isLess(int x, int y) {
   // 2 + 1
   int diffSign = x ^ y;  //sign bit == 1 if it's different sign
   /*                  differentSign == 1 and minus ^ y == 1
-   *                 it's either an underflow (minus >= 0, which means x >= y) or x < y
+   *                  it's either an underflow (minus >= 0, which means x >= y) or x < y
    *                      otherwise, it's either an overflow (minus < 0, which means x < y) or x >= y */
   // 2 + 1 + 5
   return !((minus ^ ((minus ^ y) & diffSign)) >> 31);
@@ -371,9 +371,13 @@ int isAsciiDigit(int x) {
  *   Max ops: 20
  *   Rating: 4
  */
-int trueThreeFourths(int x)
-{
-  return 2;
+int trueThreeFourths(int x) {
+  int isNegMask = x >> 31;
+  int roundOnes = isNegMask & 1;
+  int roundTows = isNegMask & 3;
+  int divTwo = (x + roundOnes) >> 1;
+  int divFour = (x + roundTows) >> 2;
+  return divFour + divTwo;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
