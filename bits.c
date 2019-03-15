@@ -221,9 +221,9 @@ int bitXor(int x, int y) {
 int conditional(int x, int y, int z) {
   // 7 - 7
   //1
-  int xIsZero = !x; //1 if x is not zero, 0 if x is zero
+  int xIsZero = !x; //0 if x is not zero, 1 if x is zero
   //1+2
-  int mask = ~xIsZero + 1; // 0xffffffff if x is not zero, 0x0 if x is zero
+  int mask = ~xIsZero + 1; // 0xffffffff if x is zero, 0x0 if x is not zero
   //1+2+4
   return (y & ~mask) | (z & mask);
 }
