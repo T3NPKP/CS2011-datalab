@@ -189,14 +189,14 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  // 7 - 5
-  int negOne = ~0; //generate negative 1
-  int next = x + negOne; // x - 1
+  // 6 - 5
+  //  int negOne = ~0; //generate negative 1
+  int next = ~x + 1; // x - 1
 
   // ~(next ^ x) will be 0 if x is 0 or Tmin
   // !x gives 1 if x is zero
   // isMin is 1 when both above is zero
-  int isMin = !((~(next ^ x)) | !x);
+  int isMin = !((x ^ next) | !x);
   return isMin;
 }
 /* 
