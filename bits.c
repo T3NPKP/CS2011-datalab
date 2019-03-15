@@ -292,16 +292,31 @@ int isNonNegative(int x) {
  *   Rating: 3
  */
 int satMul2(int x) {
-  // 1
+  // 9 - 10
+  // 2
   int twice = x << 1;
-  // 1 + 1
-  int sign = x >> 31; //0x0 if positive, 0xffffffff if negative
-  // 1 + 1 + 4
-  int maxOrMin = ((~0) << 31) + ~sign;
-  // 1 + 1 + 4 + 2
-  int flipped = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
-  // 1 + 1 + 4 + 2 + 4
-  return (twice & (~flipped)) | (flipped & maxOrMin);
+  int tMin = 1 << 31;
+  // 2 + 2
+  int isOverflow = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
+  // 2 + 2 + 5
+  // The idea is that if it overflows, this algorithm generate 0x7fffffff. If it underflows, it generates 0x80000000
+  // To do that, we take a look at the sign. If twice is positive (aka possible underflow), we do not flip the bits
+  // If twice is negative (aka possible overflow) we flip the bits. In both case, we need to flip the sign bit
+  //                             flip the digits if it overflows, do not if underflows
+  //                             xor tMin to get the correct sign (overflow makes sign bit 0, underflow makes it 1)
+  return twice ^ (isOverflow & (twice ^ (twice >> 31) ^ tMin));
+  // Gosh I went all the way around to save two operations.......
+  // Here's the original one just for fun (it is way easier to understand)
+    // 1
+//  int twice = x << 1;
+    // 1 + 1
+//  int sign = x >> 31; //0x0 if positive, 0xffffffff if negative
+    // 1 + 1 + 4
+//  int maxOrMin = ((~0) << 31) + ~sign;
+    // 1 + 1 + 4 + 2
+//  int flipped = (twice ^ x) >> 31; //0x0 if not overflow, 0xffffffff if overflow
+    // 1 + 1 + 4 + 2 + 4
+//  return (twice & (~flipped)) | (flipped & maxOrMin);
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
