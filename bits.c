@@ -372,12 +372,15 @@ int isAsciiDigit(int x) {
  *   Rating: 4
  */
 int trueThreeFourths(int x) {
-  int isNegMask = x >> 31;
-//  int roundOnes = isNegMask & 1;
-  int roundTows = isNegMask & 3;
-//  int divTwo = (x + roundOnes) >> 1;
-  int divFour = (x + roundTows + (roundTows << 1)) >> 2;
-  return divFour + (divFour << 1);
+  // 11
+  // 4
+  int fourths = x >> 2;
+  int remainder = x & 3;
+  int negative = x >> 31 & 3;
+
+  // 4 + 7
+                                      //remainder * 3              + 3 if negative
+  return fourths + (fourths << 1) + ((remainder + (remainder << 1) + negative) >> 2);
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -387,7 +390,21 @@ int trueThreeFourths(int x) {
  *   Rating: 4
  */
 int ilog2(int x) {
-  return 2;
+  //floor log 2 is the same as find the position of the left most bit (so very similar to greatest bit pos
+  int sixteen, eight, four, two, one;
+  int temp = x;
+  // The sixteen, eight, four, two, and one are place holders, will explain later
+  sixteen = (!!(temp >> 16)) << 4; //To check if the number needs at least 16 bits
+  temp = temp >> sixteen; //If it needs 16 bits, right shift 16 bits to take them out. Else don't move
+  eight = (!!(temp >> 8)) << 3; //Same as before, instead this time it is 8 bits and so on
+  temp = temp >> eight;
+  four = (!!(temp >> 4)) << 2;
+  temp = temp >> four;
+  two = (!!(temp >> 2)) << 1;
+  temp = temp >> two;
+  one = (!!(temp >> 1));
+  temp = temp >> one;
+  return (sixteen + eight + four + two + one);
 }
 /* 
  * float_neg - Return bit-level equivalent of expression -f for
@@ -401,7 +418,14 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
+  // 3
+  // 2
+  unsigned check = (uf & 0x7fffffff) > 0x7f800000; //Check if uf is NaN
+  if (check) {
+    return uf;
+  }
+  //2 + 1
+  return uf ^ 0x80000000;
 }
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
@@ -413,7 +437,31 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  return 2;
+  // 21
+  // 1
+  int frac, round;
+  int sign = x & 0x80000000;
+  int exp = 158; // 158 == 127 + 31
+  int tmp;
+  // 1 + 5
+  //x == 0, return 0
+  if (!x) return 0;
+  //x == negative max, simply return -1 * (2^31)
+  if (x == 0x80000000) return (0x80000000 ^ (exp << 23));
+  //get the absolute value of x
+  if (sign) x = -x;
+  tmp = x;
+  // 1 + 5 + 4
+  //find out the exp expected (every zero on the left means one less exp needed
+  while (!(tmp & 0x80000000)) {
+    tmp <<= 1;
+    exp -= 1;
+  }
+  // 1 + 5 + 4 + 7
+  frac = (tmp & 0x7fffffff) >> 8; //Since float has a 1 by default, we can take out the first bit and shift 8 bits to the right to take out the insignificant bits (31 - 23 = 8)
+  round = (tmp & 0x80 && ((tmp & 0x7F) || frac & 1));
+  // 1 + 5 + 4 + 7 + 4
+  return (sign + (exp << 23) + frac + round);
 }
 /* 
  * float_twice - Return bit-level equivalent of expression 2*f for
@@ -427,5 +475,15 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-  return 2;
+
+  //uf == 0, return itself
+  if((uf << 1) == 0) return uf;
+  //uf == NaN, return itself
+  if(((uf>>23) & 0xff) == 0xff) return uf;
+  //When it's a small value, but not quite zero
+  if(((uf>>23) & 0xff) == 0x00) {
+    return (uf & 0x80000000) | (uf<<1);
+  }
+  //Otherwise, Add 1 to exp
+  return uf + (1<<23);
 }
