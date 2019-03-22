@@ -485,5 +485,5 @@ unsigned float_twice(unsigned uf) {
     return (uf & 0x80000000) | (uf<<1);
   }
   //Otherwise, Add 1 to exp
-  return uf + 0x800000;
+  return uf + (1<<23);
 }
